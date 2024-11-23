@@ -27,7 +27,7 @@ Returns: image content in bytes stream
 Test the endpoint using curl:
 
 ```
-curl -o test.heic "http://127.0.0.1:5000/get_image?object_name=2153816011290181632.heic"
+curl -o test.heic "http://127.0.0.1:8080/get_image?object_name=2153816011290181632.heic"
 ```
 
 
