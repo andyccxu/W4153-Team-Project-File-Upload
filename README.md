@@ -1,4 +1,4 @@
-# File Management Microservice with AWS S3
+# File Storage Microservice with AWS S3
 
 ## Overview
 
@@ -12,6 +12,27 @@ AWS_SECRET_ACCESS_KEY=
 AWS_S3_BUCKET_NAME=
 AWS_REGION=
 ```
+
+## Deployment
+
+We deployed this service using Google Cloud VM + Docker container.
+
+Build the docker image locally and push it to Google Artifact Registry. Alternatively, we can use Google Cloud Build to build the image remotely.
+
+In the root directory of the project, write a Dockerfile and run
+```
+gcloud builds submit --region=us-east4 --tag us-east4-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_REPO_NAME/YOUR_IMAGE_NAME
+```
+
+Then, ssh to the VM, manually copy over the .env file with AWS credentials, and run
+
+```
+docker run -d -p 8080:8080 --env-file .env us-east4-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_REPO_NAME/YOUR_IMAGE_NAME
+```
+
+In this way, the .env file with secrets will not be added to the docker image.
+
+
 
 ## API Endpoints
 
