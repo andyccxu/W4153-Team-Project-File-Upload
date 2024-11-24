@@ -26,7 +26,8 @@ BUCKET_NAME = os.getenv('AWS_S3_BUCKET_NAME')
 def upload_to_s3(file_obj, bucket_name, object_name=None):
     """Upload a file to an S3 bucket and return the URL."""
     if object_name is None:
-        object_name = secure_filename(file_obj.filename) + "_" + str(uuid.uuid4())
+        filename = secure_filename(file_obj.filename)[:20]
+        object_name = filename + "_" + str(uuid.uuid4())[:50]
 
     # Upload the file to S3
     try:
