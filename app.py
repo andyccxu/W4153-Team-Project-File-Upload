@@ -1,3 +1,4 @@
+from flask_cors import CORS
 import os
 import uuid
 import boto3
@@ -10,8 +11,11 @@ import io
 # Load AWS credentials from .env file
 load_dotenv()
 
-# Flask setup
 app = Flask(__name__)
+CORS(app,
+     origins=["http://localhost:5173",
+              "https://ui-app-745799261495.us-east4.run.app"],
+     supports_credentials=True)
 
 # AWS S3 setup
 s3 = boto3.client(
@@ -40,8 +44,11 @@ def upload_to_s3(file_obj, bucket_name, object_name=None):
 
 
 # /upload endpoint
-@app.route('/upload_image', methods=['POST'])
+@app.route('/upload_image', methods=['POST', 'OPTIONS'])
 def upload_image():
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        return jsonify({'message': 'Preflight check successful'}), 200
     if 'image' not in request.files:
         return jsonify({'error': 'No image provided'}), 400
 
@@ -56,8 +63,11 @@ def upload_image():
         return jsonify({'error': 'Failed to upload image'}), 500
 
 
-@app.route('/get_image', methods=['GET'])
+@app.route('/get_image', methods=['GET', 'OPTIONS'])
 def get_image():
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        return jsonify({'message': 'Preflight check successful'}), 200
     # Get the object name from query parameters
     object_name = request.args.get('object_name')
 
@@ -83,4 +93,4 @@ def get_image():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8002)
